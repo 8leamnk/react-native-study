@@ -1,13 +1,76 @@
+import { useEffect, useState } from 'react';
+import {
+  LocationGeocodedAddress,
+  getCurrentPositionAsync,
+  requestForegroundPermissionsAsync,
+  reverseGeocodeAsync,
+} from 'expo-location';
 import { ScrollView, StyleSheet, Text, View, Dimensions } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function HomeScreen() {
+  const [location, setLocation] = useState<LocationGeocodedAddress[]>([]);
+  const [isPermission, setIsPermission] = useState(true);
+  const [city, setCity] = useState('Loading...');
+
+  const getPermission = async () => {
+    const { granted } = await requestForegroundPermissionsAsync();
+
+    if (!granted) {
+      setIsPermission(false);
+    }
+
+    return granted;
+  };
+
+  const getPosition = async () => {
+    const {
+      coords: { latitude, longitude },
+    } = await getCurrentPositionAsync({ accuracy: 5 });
+
+    return { latitude, longitude };
+  };
+
+  const getLocation = async (latitude: number, longitude: number) => {
+    const location = await reverseGeocodeAsync(
+      { latitude, longitude },
+      { useGoogleMaps: false },
+    );
+
+    setLocation(location);
+
+    return location[0];
+  };
+
+  const getCity = async () => {
+    const granted = await getPermission();
+
+    if (granted) {
+      const { latitude, longitude } = await getPosition();
+      const location = await getLocation(latitude, longitude);
+
+      if (location && location.city) {
+        setCity(location.city);
+      } else {
+        setCity('Error');
+      }
+    }
+  };
+
+  useEffect(() => {
+    getCity();
+  }, []);
+
+  useEffect(() => {
+    console.log('city', city);
+  }, [city]);
+
   return (
     <View style={styles.container}>
       <View style={styles.city}>
-        <Text style={styles.cityName}>Seoul</Text>
+        <Text style={styles.cityName}>{city}</Text>
       </View>
 
       <ScrollView
@@ -49,9 +112,7 @@ const styles = StyleSheet.create({
     fontSize: 64,
     fontWeight: '600',
   },
-  weather: {
-    backgroundColor: 'red',
-  },
+  weather: {},
   day: {
     width: SCREEN_WIDTH,
     alignItems: 'center',

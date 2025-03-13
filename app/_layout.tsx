@@ -2,14 +2,31 @@ import { useEffect, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as Location from 'expo-location';
 
+import weatherData from './weather.json';
+
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 // const WEATHER_API_KEY = '123456789';
+
+interface Weather {
+  id: number;
+  main: string;
+  description: string;
+  icon: string;
+}
+
+interface KeyValue {
+  [key: string]: string | number | KeyValue | Weather[];
+}
+
+interface Daily extends KeyValue {
+  weather: Weather[];
+}
 
 export default function RootLayout() {
   const [consent, setConsent] = useState<boolean>(false);
   const [city, setCity] = useState<string>('Loaging...');
   const [district, setDistrict] = useState<string>('');
-  const [days, setDays] = useState([]);
+  const [days, setDays] = useState<Daily[]>([]);
 
   const ask = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
@@ -40,26 +57,23 @@ export default function RootLayout() {
     setDistrict(location.district || '');
   };
 
-  const getWeather = async (latitude: number, longitude: number) => {
-    // const response = await fetch(
-    //   `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly,daily,alerts&appid=${WEATHER_API_KEY}`,
-    // );
-    // const json = await response.json();
+  const getWeather = async (_latitude: number, _longitude: number) => {
+    setDays(weatherData.daily);
+  };
+
+  const fetchData = async () => {
+    const granted = await ask();
+
+    if (granted) {
+      const { latitude, longitude } = await getCoords();
+      const location = await getLocation(latitude, longitude);
+
+      saveStateOfLocation(location);
+      await getWeather(latitude, longitude);
+    }
   };
 
   useEffect(() => {
-    async function fetchData() {
-      const granted = await ask();
-
-      if (granted) {
-        const { latitude, longitude } = await getCoords();
-        const location = await getLocation(latitude, longitude);
-
-        saveStateOfLocation(location);
-        await getWeather(latitude, longitude);
-      }
-    }
-
     fetchData();
   }, []);
 
@@ -76,30 +90,13 @@ export default function RootLayout() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.weather}
       >
-        <View style={styles.day}>
-          <Text style={styles.temp}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
-        <View style={styles.day}>
-          <Text style={styles.temp}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
-        <View style={styles.day}>
-          <Text style={styles.temp}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
-        <View style={styles.day}>
-          <Text style={styles.temp}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
-        <View style={styles.day}>
-          <Text style={styles.temp}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
-        <View style={styles.day}>
-          <Text style={styles.temp}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
+        {days.map((day, index) => (
+          <View key={index} style={styles.day}>
+            <Text style={styles.temp}>27</Text>
+            <Text style={styles.main}>{day.weather[0].main}</Text>
+            <Text style={styles.description}>{day.weather[0].description}</Text>
+          </View>
+        ))}
       </ScrollView>
     </View>
   );
@@ -133,8 +130,12 @@ const styles = StyleSheet.create({
     marginTop: 56,
     fontSize: 160,
   },
-  description: {
-    marginTop: -16,
+  main: {
     fontSize: 64,
+    marginTop: -16,
+  },
+  description: {
+    color: '#fff',
+    fontSize: 24,
   },
 });

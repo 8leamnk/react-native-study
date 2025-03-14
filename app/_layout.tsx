@@ -1,5 +1,12 @@
-import { useEffect, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import * as Location from 'expo-location';
 
 import weatherData from './weather.json';
@@ -14,15 +21,26 @@ interface Weather {
   icon: string;
 }
 
+interface Temp {
+  day: number;
+  min: number;
+  max: number;
+  night: number;
+  eve: number;
+  morn: number;
+}
+
 interface KeyValue {
-  [key: string]: string | number | KeyValue | Weather[];
+  [key: string]: string | number | KeyValue | Temp | Weather[];
 }
 
 interface Daily extends KeyValue {
+  temp: Temp;
   weather: Weather[];
 }
 
 export default function RootLayout() {
+  const timeId = useRef<NodeJS.Timeout | null>(null);
   const [consent, setConsent] = useState<boolean>(false);
   const [city, setCity] = useState<string>('Loaging...');
   const [district, setDistrict] = useState<string>('');
@@ -90,13 +108,21 @@ export default function RootLayout() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.weather}
       >
-        {days.map((day, index) => (
-          <View key={index} style={styles.day}>
-            <Text style={styles.temp}>27</Text>
-            <Text style={styles.main}>{day.weather[0].main}</Text>
-            <Text style={styles.description}>{day.weather[0].description}</Text>
+        {days.length === 0 ? (
+          <View style={styles.day}>
+            <ActivityIndicator size="large" color="white" />
           </View>
-        ))}
+        ) : (
+          days.map((day, index) => (
+            <View key={index} style={styles.day}>
+              <Text style={styles.temp}>{day.temp.day.toFixed(1)}</Text>
+              <Text style={styles.main}>{day.weather[0].main}</Text>
+              <Text style={styles.description}>
+                {day.weather[0].description}
+              </Text>
+            </View>
+          ))
+        )}
       </ScrollView>
     </View>
   );
@@ -122,6 +148,10 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   weather: {},
+  loading: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   day: {
     width: SCREEN_WIDTH,
     alignItems: 'center',
@@ -135,7 +165,6 @@ const styles = StyleSheet.create({
     marginTop: -16,
   },
   description: {
-    color: '#fff',
     fontSize: 24,
   },
 });

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -12,7 +12,6 @@ import * as Location from 'expo-location';
 import weatherData from './weather.json';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-// const WEATHER_API_KEY = '123456789';
 
 interface Weather {
   id: number;
@@ -40,7 +39,6 @@ interface Daily extends KeyValue {
 }
 
 export default function RootLayout() {
-  const timeId = useRef<NodeJS.Timeout | null>(null);
   const [consent, setConsent] = useState<boolean>(false);
   const [city, setCity] = useState<string>('Loaging...');
   const [district, setDistrict] = useState<string>('');
@@ -148,10 +146,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   weather: {},
-  loading: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   day: {
     width: SCREEN_WIDTH,
     alignItems: 'center',

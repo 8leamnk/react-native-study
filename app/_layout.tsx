@@ -105,42 +105,54 @@ export default function RootLayout() {
     fetchData();
   }, []);
 
+  if (consent) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.city}>
+          <Text style={styles.cityName}>{city}</Text>
+          <Text style={styles.districtName}>{district}</Text>
+        </View>
+
+        <ScrollView
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.weather}
+        >
+          {days.length === 0 ? (
+            <View style={styles.day}>
+              <ActivityIndicator size="large" color="white" />
+            </View>
+          ) : (
+            days.map((day, index) => (
+              <View key={index} style={styles.day}>
+                <View style={styles.tempContainer}>
+                  <Text style={styles.temp}>{day.temp.day.toFixed(1)}˚</Text>
+                  <Fontisto
+                    name={icons[day.weather[0].main]}
+                    size={72}
+                    color="black"
+                  />
+                </View>
+                <Text style={styles.main}>{day.weather[0].main}</Text>
+                <Text style={styles.description}>
+                  {day.weather[0].description}
+                </Text>
+              </View>
+            ))
+          )}
+        </ScrollView>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.city}>
-        <Text style={styles.cityName}>{city}</Text>
-        <Text style={styles.districtName}>{district}</Text>
+        <Text style={styles.cityName}>
+          {'서비스를\n이용하실 수\n없습니다. 😭'}
+        </Text>
       </View>
-
-      <ScrollView
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.weather}
-      >
-        {days.length === 0 ? (
-          <View style={styles.day}>
-            <ActivityIndicator size="large" color="white" />
-          </View>
-        ) : (
-          days.map((day, index) => (
-            <View key={index} style={styles.day}>
-              <View style={styles.tempContainer}>
-                <Text style={styles.temp}>{day.temp.day.toFixed(1)}˚</Text>
-                <Fontisto
-                  name={icons[day.weather[0].main]}
-                  size={72}
-                  color="black"
-                />
-              </View>
-              <Text style={styles.main}>{day.weather[0].main}</Text>
-              <Text style={styles.description}>
-                {day.weather[0].description}
-              </Text>
-            </View>
-          ))
-        )}
-      </ScrollView>
     </View>
   );
 }

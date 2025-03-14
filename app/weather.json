@@ -38,7 +38,7 @@
       "moonset": 1618339740,
       "moon_phase": 0.04,
       "temp": {
-        "day": 19.49,
+        "day": 4.49,
         "min": 275.09,
         "max": 284.07,
         "night": 275.09,
@@ -59,8 +59,8 @@
       "weather": [
         {
           "id": 100,
-          "main": "Sunny",
-          "description": "Sunny",
+          "main": "Clear",
+          "description": "clear sky",
           "icon": "10d"
         }
       ],
@@ -77,7 +77,7 @@
       "moonset": 1618339740,
       "moon_phase": 0.04,
       "temp": {
-        "day": 19.92,
+        "day": 6.92,
         "min": 275.09,
         "max": 284.07,
         "night": 275.09,
@@ -98,8 +98,8 @@
       "weather": [
         {
           "id": 200,
-          "main": "Sunny",
-          "description": "Sunny",
+          "main": "Clear",
+          "description": "clear sky",
           "icon": "10d"
         }
       ],
@@ -116,7 +116,7 @@
       "moonset": 1618339740,
       "moon_phase": 0.04,
       "temp": {
-        "day": 20.21,
+        "day": 2.21,
         "min": 275.09,
         "max": 284.07,
         "night": 275.09,
@@ -138,7 +138,7 @@
         {
           "id": 300,
           "main": "Clouds",
-          "description": "few cloud",
+          "description": "overcast clouds",
           "icon": "10d"
         }
       ],
@@ -155,7 +155,7 @@
       "moonset": 1618339740,
       "moon_phase": 0.04,
       "temp": {
-        "day": 17.56,
+        "day": -1.56,
         "min": 275.09,
         "max": 284.07,
         "night": 275.09,
@@ -176,8 +176,8 @@
       "weather": [
         {
           "id": 400,
-          "main": "Rain",
-          "description": "heavy rain",
+          "main": "Snow",
+          "description": "light snow",
           "icon": "10d"
         }
       ],
@@ -194,7 +194,7 @@
       "moonset": 1618339740,
       "moon_phase": 0.04,
       "temp": {
-        "day": 15.89,
+        "day": 3.89,
         "min": 275.09,
         "max": 284.07,
         "night": 275.09,
@@ -233,7 +233,7 @@
       "moonset": 1618339740,
       "moon_phase": 0.04,
       "temp": {
-        "day": 16.44,
+        "day": 2.44,
         "min": 275.09,
         "max": 284.07,
         "night": 275.09,
@@ -272,7 +272,7 @@
       "moonset": 1618339740,
       "moon_phase": 0.04,
       "temp": {
-        "day": 18.35,
+        "day": 5.35,
         "min": 275.09,
         "max": 284.07,
         "night": 275.09,
@@ -293,8 +293,8 @@
       "weather": [
         {
           "id": 700,
-          "main": "Sunny",
-          "description": "Sunny",
+          "main": "Clear",
+          "description": "clear sky",
           "icon": "10d"
         }
       ],
